@@ -14,7 +14,7 @@ let food: Segment = { x: 15, y: 10 };
 let direction: Segment = { x: 1, y: 0 };
 
 function drawSnake() {
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "black";
     snake.forEach(segment => {
         ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
     });
