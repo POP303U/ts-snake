@@ -5,7 +5,7 @@ Snake game written in Typescript
 
 **Step 1:** Install the Typescript compiler
 
-Install [node.js](https://nodejs.org), then install typescript by typing:
+Install [node.js](https://nodejs.org), then install typescript by using the terminal:
 
 ```bash
 npm install -g typescript
