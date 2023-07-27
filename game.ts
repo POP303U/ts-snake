@@ -1,5 +1,5 @@
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
-const ctx = canvas.getContext("2d")!;
+const ctx = canvas.getContext("2d");
 const gridSize = 20;
 const gridWidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
@@ -9,8 +9,8 @@ interface Segment {
     y: number;
 }
 
+const food: Segment = { x: 15, y: 10 };
 let snake: Segment[] = [{ x: 10, y: 10 }];
-let food: Segment = { x: 15, y: 10 };
 let direction: Segment = { x: 1, y: 0 };
 
 function drawSnake() {
