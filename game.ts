@@ -15,6 +15,7 @@ let direction: { x: number; y: number } = { x: 1, y: 0 }; // Explicitly define d
 
 function drawSnake() {
 ctx.fillStyle = "black";
+// biome-ignore lint/complexity/noForEach: <explanation>
 snake.forEach(segment => {
     ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
 });
