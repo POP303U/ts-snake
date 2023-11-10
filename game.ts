@@ -18,7 +18,7 @@ function drawing_segments(segment: Segment, color: string): void {
 
 function draw_snake(): void {
     // biome-ignore lint/complexity/noForEach: <noob forEach is better>
-    snake.forEach(segment => drawing_segments(segment, "green"));
+    snake.forEach(segment => drawing_segments(segment, "blue"));
 }
 
 function spawn_food(): void {
