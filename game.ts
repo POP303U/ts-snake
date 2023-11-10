@@ -1,8 +1,13 @@
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d");
-const gridSize = 20;
+ctx.fillStyle = "black";
+
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+const gridSize = 40;
 const gridWidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
+
 
 type Segment = [number, number];
 
@@ -68,7 +73,7 @@ function main_loop(): void {
     spawn_food();
     move_snake();
 
-    setTimeout(main_loop, 50);
+    setTimeout(main_loop, 100);
 }
 
 document.addEventListener("keydown", event => {
