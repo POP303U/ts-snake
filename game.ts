@@ -1,93 +1,85 @@
-const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d");
 const gridSize = 20;
 const gridWidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
 
-interface Segment {
-x: number;
-y: number;
+type Segment = [number, number];
+
+const food: Segment = [15, 10];
+let snake: Segment[] = [[10, 10]];
+let direction: Segment = [1, 0];
+
+function drawing_segments(segment: Segment, color: string): void {
+    // biome-ignore lint/style/noNonNullAssertion: <i don't need errors>
+    ctx!.fillStyle = color;
+    ctx?.fillRect(segment[0] * gridSize, segment[1] * gridSize, gridSize, gridSize);
 }
 
-const food: Segment = { x: 15, y: 10 };
-let snake: Segment[] = [{ x: 10, y: 10 }];
-let direction: { x: number; y: number } = { x: 1, y: 0 }; // Explicitly define direction type}}
-
-function drawSnake() {
-ctx.fillStyle = "black";
-// biome-ignore lint/complexity/noForEach: <explanation>
-snake.forEach(segment => {
-    ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
-});
+function draw_snake(): void {
+    // biome-ignore lint/complexity/noForEach: <noob forEach is better>
+    snake.forEach(segment => drawing_segments(segment, "green"));
 }
 
-function drawFood() {
-ctx.fillStyle = "red";
-ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+function spawn_food(): void {
+    drawing_segments(food, "red");
 }
 
-function moveSnake() {
-const newHead: Segment = {
-    x: snake[0].x + direction.x,
-    y: snake[0].y + direction.y,
-};
-snake.unshift(newHead);
+function move_snake(): void {
+    const newHead: Segment = [
+        snake[0][0] + direction[0],
+        snake[0][1] + direction[1],
+    ];
+    snake.unshift(newHead);
 
-if (newHead.x === food.x && newHead.y === food.y) {
-    generateFood();
-} else {
-    snake.pop();
-}
-}
-
-function generateFood() {
-food.x = Math.floor(Math.random() * gridWidth);
-food.y = Math.floor(Math.random() * gridHeight);
+    if (newHead[0] === food[0] && newHead[1] === food[1]) {
+        food_generation();
+    } else {
+        snake.pop();
+    }
 }
 
-function checkCollision() {
-const head = snake[0];
-return (
-    head.x < 0 ||
-    head.y < 0 ||
-    head.x >= gridWidth ||
-    head.y >= gridHeight ||
-    snake.some(segment => segment !== head && segment.x === head.x && segment.y === head.y)
-);
+function food_generation(): void {
+    food[0] = Math.floor(Math.random() * gridWidth);
+    food[1] = Math.floor(Math.random() * gridHeight);
 }
 
-function gameLoop() {
-if (checkCollision()) {
-    alert("Game Over!");
-    snake = [{ x: 10, y: 10 }];
-    direction = { x: 1, y: 0 };
+function collision(): boolean {
+    const [head, ...tail] = snake;
+    return (
+        head[0] < 0 ||
+        head[1] < 0 ||
+        head[0] >= gridWidth ||
+        head[1] >= gridHeight ||
+        tail.some(segment => segment[0] === head[0] && segment[1] === head[1])
+    );
 }
 
-ctx.clearRect(0, 0, canvas.width, canvas.height);
+function main_loop(): void {
+    if (collision()) {
+        alert("Game Over!");
+        snake = [[10, 10]];
+        direction = [1, 0];
+    }
 
-drawSnake();
-drawFood();
-moveSnake();
+    // don't care about null
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    draw_snake();
+    spawn_food();
+    move_snake();
 
-setTimeout(gameLoop, 100);
+    setTimeout(main_loop, 50);
 }
 
 document.addEventListener("keydown", event => {
-    const keyCode = event.keyCode;
-    switch (keyCode) {
-        case 37: // Left arrow
-            direction = { x: -1, y: 0 };
-            break;
-        case 38:    // Up arrow
-            direction = { x: 0, y: -1 };
-            break;
-        case 39:    // Right arrow
-            direction = { x: 1, y: 0 };
-            break;
-        case 40:    // Down arrow
-            direction = { x: 0, y: 1 };
-            break;
-    }
+    const keyCode = event.keyCode; //developer.mozilla.org/docs/Web/API/KeyboardEvent/keyCodeyCode
+    const directions: Record<number, Segment> = {
+        37: [-1, 0],
+        38: [0, -1],
+        39: [1, 0],
+        40: [0, 1],
+    };
+    direction = directions[keyCode] || direction;
 });
 
-gameLoop();
+main_loop();
